@@ -1,6 +1,7 @@
 package com.company.books.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,19 +11,24 @@ import com.company.books.backend.service.ICategoriaService;
 
 @RestController // Marca esta clase como un controlador REST para manejar solicitudes HTTP
 @RequestMapping("/v1") // Define la ruta base de este controlador como /v1
-public class CategoriaRestController {
-	
-	@Autowired // Inyección de dependencia para usar el servicio sin inicializarlo manualmente
-	private ICategoriaService service;// Servicio para manejar la lógica de negocio de categorías
-	
-	@GetMapping("/categorias")// Define que este método responderá a solicitudes GET en /v1/categorias
-	public CategoriaResponseRest consultaCat() {
-		// Llama al servicio para obtener las categorías de la base de datos
-		CategoriaResponseRest response = service.buscarCategorias();
-		// Devuelve la respuesta al cliente en formato JSON
-		return response;
-	}
+public class CategoriaRestController { 
+    // Clase que actúa como un controlador REST para manejar solicitudes HTTP relacionadas con categorías.
+
+    @Autowired 
+    // Inyección de dependencia: Spring inicializa automáticamente el objeto 'service' 
+    // para que podamos usarlo sin crear una instancia manualmente.
+    private ICategoriaService service; 
+    // Servicio que contiene la lógica de negocio para gestionar las categorías.
+
+    @GetMapping("/categorias") 
+    // Define que este método manejará solicitudes HTTP GET en el endpoint /v1/categorias.
+    public ResponseEntity<CategoriaResponseRest> consultaCat() {
+        // Llama al servicio para obtener las categorías desde la base de datos y devolver la respuesta.
+        return service.buscarCategorias(); 
+        // Devuelve un objeto ResponseEntity con la lista de categorías y el estado HTTP correspondiente.
+    }
 }
+
 /*
 	@RestController
 	- Indica que esta clase es un controlador REST.

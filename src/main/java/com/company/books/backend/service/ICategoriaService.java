@@ -1,10 +1,15 @@
 package com.company.books.backend.service;
 
+import org.springframework.http.ResponseEntity;
+
 import com.company.books.backend.response.CategoriaResponseRest;
 
 public interface ICategoriaService {
-
-	public CategoriaResponseRest buscarCategorias();
+	
+	// Declara un método para buscar categorías en el sistema.
+    // Este método devuelve un ResponseEntity que contiene un objeto CategoriaResponseRest,
+    // el cual incluye la información de las categorías y metadatos de la operación.
+	public ResponseEntity<CategoriaResponseRest> buscarCategorias();
 	
 }
 /*
