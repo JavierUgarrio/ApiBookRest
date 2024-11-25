@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +46,12 @@ public class CategoriaRestController {
     public ResponseEntity<CategoriaResponseRest>crearCaTegoria(@RequestBody Categoria request){
     	ResponseEntity<CategoriaResponseRest> response = service.crearCategoria(request);
     	return response;
-    	
+    }
+    
+    @PutMapping("/categorias/{id}")
+    public ResponseEntity<CategoriaResponseRest>editarCategoria(@RequestBody Categoria reques,@PathVariable Long id ){
+    	ResponseEntity<CategoriaResponseRest> response = service.editarCategoria(reques, id);
+    	return response;
     }
 }
 

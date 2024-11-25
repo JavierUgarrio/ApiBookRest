@@ -132,6 +132,51 @@ public class CategoriaServiceImpl implements ICategoriaService {
      // Devuelve la respuesta con estado 200 (OK).
      return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK);
  }
+ 
+ @Override
+ @Transactional // Indica que este método maneja una transacción, lo que garantiza que los cambios en la base de datos sean consistentes.
+ public ResponseEntity<CategoriaResponseRest> editarCategoria(Categoria categoria, Long id) {
+     log.info("Inicio método editarCategoria"); // Escribe en los logs que el método ha comenzado.
+
+     CategoriaResponseRest response = new CategoriaResponseRest(); // Crea un objeto para devolver información al cliente.
+     List<Categoria> list = new ArrayList<>(); // Lista para guardar la categoría editada.
+
+     try {
+         // Busca la categoría en la base de datos por su ID.
+         Optional<Categoria> categoriaBuscada = categoriaDao.findById(id);
+
+         if (categoriaBuscada.isPresent()) { // Verifica si la categoría existe.
+             // Actualiza los valores de la categoría con los datos recibidos.
+             categoriaBuscada.get().setNombre(categoria.getNombre());
+             categoriaBuscada.get().setDescripcion(categoria.getDescripcion());
+
+             // Guarda los cambios en la base de datos.
+             Categoria categoriaEditar = categoriaDao.save(categoriaBuscada.get());
+
+             if (categoriaEditar != null) { // Verifica si la categoría se guardó correctamente.
+                 response.setMetadata("Respuesta OK", "200", "Categoría editada exitosamente"); // Añade información de éxito.
+                 list.add(categoriaEditar); // Agrega la categoría editada a la lista.
+                 response.getCategoriaResponse().setCategoria(list); // Incluye la lista en la respuesta.
+             } else {
+                 log.error("Error al editar la categoría"); // Escribe un error en los logs.
+                 response.setMetadata("Fallo en la respuesta", "-1", "Categoría no editada"); // Indica un error en los metadatos.
+                 return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.BAD_REQUEST); // Responde con un error 400.
+             }
+
+         } else {
+             log.error("Categoría no encontrada"); // Escribe en los logs que la categoría no existe.
+             response.setMetadata("Fallo en la respuesta", "-1", "Categoría no encontrada"); // Indica en los metadatos que no se encontró.
+             return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.NOT_FOUND); // Responde con un error 404.
+         }
+
+     } catch (Exception ex) {
+         log.error("Error al editar la categoría", ex); // Registra en los logs el error ocurrido.
+         response.setMetadata("Fallo en la respuesta", "-1", "Categoría no actualizada"); // Añade información de error en los metadatos.
+         return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR); // Responde con un error 500.
+     }
+
+     return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK); // Devuelve la respuesta con un estado 200 si todo salió bien.
+ }
 
  
 }
