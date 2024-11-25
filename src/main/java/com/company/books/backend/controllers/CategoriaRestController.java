@@ -2,6 +2,7 @@ package com.company.books.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,13 @@ public class CategoriaRestController {
     	ResponseEntity<CategoriaResponseRest> response = service.editarCategoria(reques, id);
     	return response;
     }
+    
+    @DeleteMapping("/categorias/{id}")
+    public ResponseEntity<CategoriaResponseRest>eliminarCategoria(@PathVariable Long id){
+    	ResponseEntity<CategoriaResponseRest>response = service.eliminarCategoria(id);
+    	return response;
+    }
+    
 }
 
 

@@ -19,6 +19,8 @@ public interface ICategoriaService {
 	
 	public ResponseEntity<CategoriaResponseRest>editarCategoria(Categoria categoria, Long id);
 	
+	public ResponseEntity<CategoriaResponseRest>eliminarCategoria(Long id);
+	
 }
 /*
 	La interfaz ICategoriaService sirve para definir un método llamado buscarCategorias, que cualquier clase debe implementar si quiere manejar las categorías del sistema.
