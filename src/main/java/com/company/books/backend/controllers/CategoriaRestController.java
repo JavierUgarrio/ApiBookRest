@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.company.books.backend.model.Categoria;
 import com.company.books.backend.response.CategoriaResponseRest;
 import com.company.books.backend.service.ICategoriaService;
 
@@ -20,7 +23,8 @@ public class CategoriaRestController {
     // para que podamos usarlo sin crear una instancia manualmente.
     private ICategoriaService service; 
     // Servicio que contiene la lógica de negocio para gestionar las categorías.
-
+    
+    //GET
     @GetMapping("/categorias") 
     // Define que este método manejará solicitudes HTTP GET en el endpoint /v1/categorias.
     public ResponseEntity<CategoriaResponseRest> consultaCat() {
@@ -29,10 +33,19 @@ public class CategoriaRestController {
         // Devuelve un objeto ResponseEntity con la lista de categorías y el estado HTTP correspondiente.
     }
     
+    //GET
     @GetMapping("/categorias/{id}")
     public ResponseEntity<CategoriaResponseRest>consultaCategoriasId(@PathVariable Long id){
     	ResponseEntity<CategoriaResponseRest> response = service.buscarPorId(id);
     	return response;
+    }
+    
+    //POST	
+    @PostMapping("/categorias")
+    public ResponseEntity<CategoriaResponseRest>crearCaTegoria(@RequestBody Categoria request){
+    	ResponseEntity<CategoriaResponseRest> response = service.crearCategoria(request);
+    	return response;
+    	
     }
 }
 

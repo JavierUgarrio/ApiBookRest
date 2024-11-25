@@ -93,10 +93,37 @@ public class CategoriaServiceImpl implements ICategoriaService {
          response.setMetadata("Fallo en la respuesta", "-1", "Categoria no encontrada"); // Indica que ocurrió un problema.
          return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR); // Devuelve un estado 500 (error del servidor).
      }
-
+  
+     response.setMetadata("Respuesta OK", "200", "Respuesta Exitosa");// Establece los metadatos indicando que la operación fue exitosa.
      return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK); // Si todo fue bien, devuelve la respuesta con estado 200 (OK).
  }
 
+ @Override
+ @Transactional
+ public ResponseEntity<CategoriaResponseRest>crearCategoria(Categoria categoria){
+	 log.info("inicio metodo crearCategoria"); // Escribe en los logs que el método ha comenzado.
+	 
+	 CategoriaResponseRest response = new CategoriaResponseRest(); // Crea un objeto para devolver los datos de la categoría al cliente.
+     List<Categoria> list = new ArrayList<>(); // Lista para guardar la categoría encontrada.
+     
+     try {
+    	 Categoria categoriaGuardada = categoriaDao.save(categoria);
+    	 if(categoriaGuardada !=null){
+    		 list.add(categoriaGuardada);
+             response.getCategoriaResponse().setCategoria(list); 
+    	 }else {
+    		 log.error("Error en grabar la categoria"); // Escribe un error en los logs.
+             response.setMetadata("Fallo en la respuesta", "-1", "Categoria no guardada"); // Indica en los metadatos que no se encontró.
+             return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.BAD_REQUEST); // Devuelve un estado 404 (no encontrado).
+    	 }
+     }catch(Exception ex) {
+    	 log.error("Error al crear la categoria Libro"); // Escribe un error en los logs.
+         response.setMetadata("Fallo en la respuesta", "-1", "Categoria no insertada"); // Indica que ocurrió un problema.
+         return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR); // Devuelve un estado 500 (error del servidor).
+     }
+     response.setMetadata("Respuesta OK", "200", "Respuesta Exitosa");// Establece los metadatos indicando que la operación fue exitosa.
+     return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK); // Si todo fue bien, devuelve la respuesta con estado 200 (OK).
+ }
  
  
 }
