@@ -97,34 +97,42 @@ public class CategoriaServiceImpl implements ICategoriaService {
      response.setMetadata("Respuesta OK", "200", "Respuesta Exitosa");// Establece los metadatos indicando que la operación fue exitosa.
      return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK); // Si todo fue bien, devuelve la respuesta con estado 200 (OK).
  }
-
- @Override
- @Transactional
- public ResponseEntity<CategoriaResponseRest>crearCategoria(Categoria categoria){
-	 log.info("inicio metodo crearCategoria"); // Escribe en los logs que el método ha comenzado.
-	 
-	 CategoriaResponseRest response = new CategoriaResponseRest(); // Crea un objeto para devolver los datos de la categoría al cliente.
-     List<Categoria> list = new ArrayList<>(); // Lista para guardar la categoría encontrada.
-     
-     try {
-    	 Categoria categoriaGuardada = categoriaDao.save(categoria);
-    	 if(categoriaGuardada !=null){
-    		 list.add(categoriaGuardada);
-             response.getCategoriaResponse().setCategoria(list); 
-    	 }else {
-    		 log.error("Error en grabar la categoria"); // Escribe un error en los logs.
-             response.setMetadata("Fallo en la respuesta", "-1", "Categoria no guardada"); // Indica en los metadatos que no se encontró.
-             return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.BAD_REQUEST); // Devuelve un estado 404 (no encontrado).
-    	 }
-     }catch(Exception ex) {
-    	 log.error("Error al crear la categoria Libro"); // Escribe un error en los logs.
-         response.setMetadata("Fallo en la respuesta", "-1", "Categoria no insertada"); // Indica que ocurrió un problema.
-         return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR); // Devuelve un estado 500 (error del servidor).
-     }
-     response.setMetadata("Respuesta OK", "200", "Respuesta Exitosa");// Establece los metadatos indicando que la operación fue exitosa.
-     return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK); // Si todo fue bien, devuelve la respuesta con estado 200 (OK).
- }
  
+ @Override
+ @Transactional // Indica que este método maneja una transacción, es decir, una operación de base de datos.
+ public ResponseEntity<CategoriaResponseRest> crearCategoria(Categoria categoria) {
+     log.info("Inicio método crearCategoria"); // Muestra en los logs que el método comenzó.
+
+     CategoriaResponseRest response = new CategoriaResponseRest(); // Crea un objeto que se enviará como respuesta al cliente.
+     List<Categoria> list = new ArrayList<>(); // Lista para almacenar la categoría guardada.
+
+     try {
+         // Guarda la categoría en la base de datos y la almacena en una variable.
+         Categoria categoriaGuardada = categoriaDao.save(categoria);
+         
+         // Verifica si la categoría fue guardada correctamente.
+         if (categoriaGuardada != null) {
+             list.add(categoriaGuardada); // Agrega la categoría guardada a la lista.
+             response.getCategoriaResponse().setCategoria(list); // Añade la lista al objeto de respuesta.
+         } else {
+             log.error("Error al guardar la categoría"); // Escribe en los logs que hubo un error.
+             response.setMetadata("Fallo en la respuesta", "-1", "Categoría no guardada"); // Añade información de error en la respuesta.
+             // Devuelve la respuesta con estado 400 (solicitud incorrecta).
+             return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.BAD_REQUEST);
+         }
+     } catch (Exception ex) {
+         log.error("Error al crear la categoría", ex); // Registra en los logs el error ocurrido.
+         response.setMetadata("Fallo en la respuesta", "-1", "Categoría no insertada"); // Añade información de error en los metadatos.
+         // Devuelve la respuesta con estado 500 (error interno del servidor).
+         return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+     }
+
+     // Si todo salió bien, añade información de éxito a los metadatos.
+     response.setMetadata("Respuesta OK", "200", "Categoría creada exitosamente");
+     // Devuelve la respuesta con estado 200 (OK).
+     return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK);
+ }
+
  
 }
 /*
