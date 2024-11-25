@@ -11,6 +11,9 @@ public interface ICategoriaService {
     // el cual incluye la información de las categorías y metadatos de la operación.
 	public ResponseEntity<CategoriaResponseRest> buscarCategorias();
 	
+	
+	public ResponseEntity<CategoriaResponseRest>buscarPorId(Long id);
+	
 }
 /*
 	La interfaz ICategoriaService sirve para definir un método llamado buscarCategorias, que cualquier clase debe implementar si quiere manejar las categorías del sistema.

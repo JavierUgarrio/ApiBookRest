@@ -3,6 +3,7 @@ package com.company.books.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,15 @@ public class CategoriaRestController {
         return service.buscarCategorias(); 
         // Devuelve un objeto ResponseEntity con la lista de categorías y el estado HTTP correspondiente.
     }
+    
+    @GetMapping("/categorias/{id}")
+    public ResponseEntity<CategoriaResponseRest>consultaCategoriasId(@PathVariable Long id){
+    	ResponseEntity<CategoriaResponseRest> response = service.buscarPorId(id);
+    	return response;
+    }
 }
+
+
 
 /*
 	@RestController

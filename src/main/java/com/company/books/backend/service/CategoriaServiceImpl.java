@@ -1,6 +1,8 @@
 package com.company.books.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +66,39 @@ public class CategoriaServiceImpl implements ICategoriaService {
      // Si todo ha ido bien, devuelve la respuesta con un estado HTTP 200 (OK).
      return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK);
  }
+ 
+ @Override
+ @Transactional(readOnly = true) // Este método solo lee datos de la base de datos, no los modifica.
+ public ResponseEntity<CategoriaResponseRest> buscarPorId(Long id) {
+
+     log.info("inicio metodo buscarPorId"); // Escribe en los logs que el método ha comenzado.
+
+     CategoriaResponseRest response = new CategoriaResponseRest(); // Crea un objeto para devolver los datos de la categoría al cliente.
+     List<Categoria> list = new ArrayList<>(); // Lista para guardar la categoría encontrada.
+
+     try {
+         Optional<Categoria> categoria = categoriaDao.findById(id); // Busca una categoría en la base de datos usando el ID.
+
+         if (categoria.isPresent()) { // Si la categoría existe:
+             list.add(categoria.get()); // La añade a la lista.
+             response.getCategoriaResponse().setCategoria(list); // Guarda la lista dentro del objeto de respuesta.
+         } else { // Si no encuentra la categoría:
+             log.error("Error en consultar la categoria"); // Escribe un error en los logs.
+             response.setMetadata("Fallo en la respuesta", "-1", "Categoria no encontrada"); // Indica en los metadatos que no se encontró.
+             return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.NOT_FOUND); // Devuelve un estado 404 (no encontrado).
+         }
+
+     } catch (Exception ex) { // Si ocurre un error mientras se busca la categoría:
+         log.error("Error en consultar la categoria"); // Escribe un error en los logs.
+         response.setMetadata("Fallo en la respuesta", "-1", "Categoria no encontrada"); // Indica que ocurrió un problema.
+         return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR); // Devuelve un estado 500 (error del servidor).
+     }
+
+     return new ResponseEntity<CategoriaResponseRest>(response, HttpStatus.OK); // Si todo fue bien, devuelve la respuesta con estado 200 (OK).
+ }
+
+ 
+ 
 }
 /*
  	Esta clase CategoriaServiceImpl implementa el método buscarCategorias, 
