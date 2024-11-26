@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.company.books.backend.model.Libro;
 import com.company.books.backend.model.dao.ILibrosDao;
-import com.company.books.backend.response.CategoriaResponseRest;
 import com.company.books.backend.response.LibrosResponseRest;
 
 
@@ -71,5 +70,31 @@ public class LibrosServiceImpl implements ILibrosService {
 		response.setMetadata("Respuesta OK", "200", "Respuesta Exitosa");
 		return new ResponseEntity<LibrosResponseRest>(response, HttpStatus.OK);
 	}
-
+	
+	@Override
+	@Transactional
+	public ResponseEntity<LibrosResponseRest>crearLibro(Libro libro){
+		log.info("Iniciamos el metodo de crearLibro()");
+		LibrosResponseRest response = new LibrosResponseRest();
+		List<Libro>listaLibros = new ArrayList<>();
+		try {
+			Libro libroGuardado = librosDao.save(libro);
+			if(libroGuardado!=null) {
+				listaLibros.add(libroGuardado);
+				response.getLibrosResponse().setLibros(listaLibros);
+			}else {
+				log.error("error en la consulta Libros");
+				response.setMetadata("Fallo en la consulta", "-1", "Respuesta incorrecta");
+				return new ResponseEntity<LibrosResponseRest>(response, HttpStatus.BAD_REQUEST);
+			}
+			
+		}catch(Exception ex) {
+			response.setMetadata("Fallo", "-1", "Respuesta incorrecta");
+			log.error("error a la hora de consultar libros por Id: "+ex.getMessage());
+			ex.getStackTrace();
+			return new ResponseEntity<LibrosResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.setMetadata("Respuesta OK", "200", "Categoría creada exitosamente");
+	    return new ResponseEntity<LibrosResponseRest>(response, HttpStatus.OK);
+	}
 }

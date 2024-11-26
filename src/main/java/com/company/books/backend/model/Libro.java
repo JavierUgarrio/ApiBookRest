@@ -24,7 +24,7 @@ public class Libro implements Serializable {
 	private String descripcion;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({"hibermateLazyInitializer", "handler"})
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private Categoria categoria;
 	
 	

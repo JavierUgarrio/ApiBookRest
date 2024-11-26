@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.company.books.backend.model.Categoria;
 import com.company.books.backend.response.CategoriaResponseRest;
-import com.company.books.backend.response.LibrosResponseRest;
 import com.company.books.backend.service.ICategoriaService;
 
 @RestController // Marca esta clase como un controlador REST para manejar solicitudes HTTP
