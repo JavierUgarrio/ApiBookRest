@@ -5,7 +5,9 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.core.userdetails.User;
 //import org.springframework.security.core.userdetails.UserDetails;
@@ -51,7 +53,8 @@ public class ConfigSecurity {
 				.requestMatchers(HttpMethod.GET, "/v1/categorias/**").hasRole("Jefe")
 				.requestMatchers(HttpMethod.POST, "/v1/categorias").hasRole("Jefe")
 				.requestMatchers(HttpMethod.PUT, "/v1/categorias/**").hasRole("Jefe")
-				.requestMatchers(HttpMethod.DELETE, "/v1/categorias/**").hasRole("Jefe");
+				.requestMatchers(HttpMethod.DELETE, "/v1/categorias/**").hasRole("Jefe")
+				.requestMatchers("/v1/authenticate").permitAll();
 		});
 		// Habilita la autenticación básica (Basic Auth) con configuración por defecto.
 		http.httpBasic(Customizer.withDefaults());
@@ -62,6 +65,12 @@ public class ConfigSecurity {
 		return http.build();
 		
 	}
+	
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
+	
 	 /**
      * Configuración de la seguridad en memoria para la aplicación.
      * 
