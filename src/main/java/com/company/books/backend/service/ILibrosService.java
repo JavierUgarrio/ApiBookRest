@@ -10,4 +10,6 @@ public interface ILibrosService {
 	public ResponseEntity<LibrosResponseRest> buscarLibros();
 	public ResponseEntity<LibrosResponseRest>buscarLibrosId(Long id);
 	public ResponseEntity<LibrosResponseRest>crearLibro(Libro libro);
+	public ResponseEntity<LibrosResponseRest>editarLibro(Libro libro, Long id);
+	public ResponseEntity<LibrosResponseRest>eliminarLibro(Long id);
 }
