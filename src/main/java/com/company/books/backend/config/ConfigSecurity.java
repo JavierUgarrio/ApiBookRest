@@ -1,17 +1,67 @@
 package com.company.books.backend.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+//import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class ConfigSecurity {
+	
+	@Bean
+	public UserDetailsManager userDetailsManager(DataSource dataSource) {
+		
+		return new JdbcUserDetailsManager(dataSource);
+	}
+	
+	/**
+	 * Configura las reglas de seguridad para las solicitudes HTTP en la aplicación.
+	 * Define los permisos de acceso según los roles de los usuarios para las diferentes rutas y métodos HTTP.
+	 * 
+	 * @Bean - Marca el método como un componente administrado por Spring, registrando esta configuración en el contexto.
+	 * 
+	 * @param http - Proporciona la configuración de seguridad para las solicitudes HTTP.
+	 * @return SecurityFilterChain - La cadena de filtros de seguridad configurada.
+	 * @throws Exception - Puede lanzar excepciones relacionadas con la configuración de seguridad.
+	 */
+	
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http)throws Exception {
+		http.authorizeHttpRequests( configure ->{
+			configure
+				.requestMatchers(HttpMethod.GET, "/v1/libros").hasRole("Empleado")
+				.requestMatchers(HttpMethod.GET, "/v1/libros/**").hasRole("Empleado")
+				.requestMatchers(HttpMethod.GET, "/v1/libros").hasRole("Jefe")
+				.requestMatchers(HttpMethod.GET, "/v1/libros/**").hasRole("Jefe")
+				.requestMatchers(HttpMethod.POST, "/v1/libros").hasRole("Jefe")
+				.requestMatchers(HttpMethod.PUT, "/v1/libros/**").hasRole("Jefe")
+				.requestMatchers(HttpMethod.DELETE, "/v1/libros/**").hasRole("Jefe")
+				.requestMatchers(HttpMethod.GET, "/v1/categorias").hasRole("Empleado")
+				.requestMatchers(HttpMethod.GET, "/v1/categorias/**").hasRole("Empleado")
+				.requestMatchers(HttpMethod.GET, "/v1/categorias").hasRole("Jefe")
+				.requestMatchers(HttpMethod.GET, "/v1/categorias/**").hasRole("Jefe")
+				.requestMatchers(HttpMethod.POST, "/v1/categorias").hasRole("Jefe")
+				.requestMatchers(HttpMethod.PUT, "/v1/categorias/**").hasRole("Jefe")
+				.requestMatchers(HttpMethod.DELETE, "/v1/categorias/**").hasRole("Jefe");
+		});
+		// Habilita la autenticación básica (Basic Auth) con configuración por defecto.
+		http.httpBasic(Customizer.withDefaults());
+		
+		// Desactiva la protección CSRF (Cross-Site Request Forgery) para simplificar el desarrollo.
+		http.csrf(csrf-> csrf.disable());
+		
+		return http.build();
+		
+	}
 	 /**
      * Configuración de la seguridad en memoria para la aplicación.
      * 
@@ -21,7 +71,7 @@ public class ConfigSecurity {
      * simples, pero no recomendado para entornos de producción.
      * 
      * @return InMemoryUserDetailsManager que contiene los usuarios definidos.
-     */
+     
 	@Bean
 	public InMemoryUserDetailsManager userDetailsManager() {
 		
@@ -46,37 +96,5 @@ public class ConfigSecurity {
 		return new InMemoryUserDetailsManager(javier,maria,alvaro);
 		
 	}
-	
-	/**
-	 * Configura las reglas de seguridad para las solicitudes HTTP en la aplicación.
-	 * Define los permisos de acceso según los roles de los usuarios para las diferentes rutas y métodos HTTP.
-	 * 
-	 * @Bean - Marca el método como un componente administrado por Spring, registrando esta configuración en el contexto.
-	 * 
-	 * @param http - Proporciona la configuración de seguridad para las solicitudes HTTP.
-	 * @return SecurityFilterChain - La cadena de filtros de seguridad configurada.
-	 * @throws Exception - Puede lanzar excepciones relacionadas con la configuración de seguridad.
-	 */
-	
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http)throws Exception {
-		http.authorizeHttpRequests( configure ->{
-			configure
-				.requestMatchers(HttpMethod.GET, "/v1/libros").hasRole("Empleado")
-				.requestMatchers(HttpMethod.GET, "/v1/libros/**").hasRole("Empleado")
-				.requestMatchers(HttpMethod.GET, "/v1/libros").hasRole("Jefe")
-				.requestMatchers(HttpMethod.GET, "/v1/libros/**").hasRole("Jefe")
-				.requestMatchers(HttpMethod.POST, "/v1/libros").hasRole("Jefe")
-				.requestMatchers(HttpMethod.PUT, "/v1/libros/**").hasRole("Jefe")
-				.requestMatchers(HttpMethod.DELETE, "/v1/libros/**").hasRole("Jefe");
-		});
-		// Habilita la autenticación básica (Basic Auth) con configuración por defecto.
-		http.httpBasic(Customizer.withDefaults());
-		
-		// Desactiva la protección CSRF (Cross-Site Request Forgery) para simplificar el desarrollo.
-		http.csrf(csrf-> csrf.disable());
-		
-		return http.build();
-		
-	}
+	*/
 }
