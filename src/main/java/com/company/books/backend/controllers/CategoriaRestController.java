@@ -2,6 +2,7 @@ package com.company.books.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import com.company.books.backend.model.Categoria;
 import com.company.books.backend.response.CategoriaResponseRest;
 import com.company.books.backend.service.ICategoriaService;
 
+@CrossOrigin(origins = {"http://localhost:4200"})
 @RestController // Marca esta clase como un controlador REST para manejar solicitudes HTTP
 @RequestMapping("/v1") // Define la ruta base de este controlador como /v1
 public class CategoriaRestController { 

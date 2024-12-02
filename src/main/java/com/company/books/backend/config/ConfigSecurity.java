@@ -57,14 +57,14 @@ public class ConfigSecurity {
 				.requestMatchers(HttpMethod.POST, "/v1/libros").hasRole("Jefe")
 				.requestMatchers(HttpMethod.PUT, "/v1/libros/**").hasRole("Jefe")
 				.requestMatchers(HttpMethod.DELETE, "/v1/libros/**").hasRole("Jefe")
-				.requestMatchers(HttpMethod.GET, "/v1/categorias").hasRole("Empleado")
+				//.requestMatchers(HttpMethod.GET, "/v1/categorias").hasRole("Empleado")
 				.requestMatchers(HttpMethod.GET, "/v1/categorias/**").hasRole("Empleado")
 				.requestMatchers(HttpMethod.GET, "/v1/categorias").hasRole("Jefe")
 				.requestMatchers(HttpMethod.GET, "/v1/categorias/**").hasRole("Jefe")
 				.requestMatchers(HttpMethod.POST, "/v1/categorias").hasRole("Jefe")
 				.requestMatchers(HttpMethod.PUT, "/v1/categorias/**").hasRole("Jefe")
 				.requestMatchers(HttpMethod.DELETE, "/v1/categorias/**").hasRole("Jefe")
-				.requestMatchers("/v1/authenticate","/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll();
+				.requestMatchers("/v1/categorias","/v1/authenticate","/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll();
 		})
 		.addFilterBefore(jwtReqFilter, UsernamePasswordAuthenticationFilter.class)
 		.sessionManagement((session)-> session
